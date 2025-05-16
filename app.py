@@ -1,3 +1,4 @@
+import os
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from flask import Flask, request, jsonify
@@ -22,4 +23,4 @@ def predict():
     return jsonify({'prediction': result})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
