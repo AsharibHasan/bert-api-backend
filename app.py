@@ -39,16 +39,33 @@ def predict():
         label = "Real" if prediction.item() == 1 else "Fake"
         confidence_score = round(confidence.item(), 4)
 
+        explanation = get_explanation(label)
+
         print(f"✅ Prediction: {label}, Confidence: {confidence_score}")
+        print(f"ℹ️ Explanation: {explanation}")
 
         return jsonify({
             "label": label,
-            "confidence": confidence_score
+            "confidence": confidence_score,
+            "explanation": explanation
         })
 
     except Exception as e:
         print(f"❌ Exception: {str(e)}")
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
+def get_explanation(label):
+    if label == "Fake":
+        return (
+            "This news has been flagged because it contains exaggerated claims, lacks credible evidence, "
+            "uses misleading or sensational language, or conflicts with verified facts from trusted sources. "
+            "Always cross-check with trusted news outlets to confirm accuracy."
+        )
+    else:
+        return (
+            "This article appears reliable because it cites verified facts, credible sources, and consistent reporting. "
+            "It avoids exaggerated language, uses clear and factual statements, and aligns with information provided by reputable news organizations."
+        )
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
